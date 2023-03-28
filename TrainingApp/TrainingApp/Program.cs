@@ -12,10 +12,14 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 class Program
 {
+    
+    static uint silnia=1;
+
     static void Main(string[] args)
     {
         System.Diagnostics.Stopwatch StopWatch = new System.Diagnostics.Stopwatch();
-        Console.WriteLine("Wybierz:");
+
+    Console.WriteLine("Wybierz:");
         Console.WriteLine("(1) Silnia iteracyjnie");
         Console.WriteLine("(2) Silnia rekurencyjnie");
         Console.WriteLine("(3) Liczby pierwsze lista");
@@ -37,11 +41,13 @@ class Program
         {
             case "1" :
                 Console.WriteLine("Silnia iteracyjnie");
-                IterativeSilnia(numberValid);
+                uint silniaIterative = IterativeSilnia(numberValid);
+                WriteLineInColor(ConsoleColor.Green, silniaIterative.ToString() + "\n");
                 break;
             case "2":
                 Console.WriteLine("Silnia rekurencyjnie");
-                IterativeSilnia(numberValid);
+                uint silniaRecursive = RecursiveSilnia(numberValid);
+                WriteLineInColor(ConsoleColor.Green, silniaRecursive.ToString() + "\n");
                 break;
             case "3":
                 Console.WriteLine("Liczby pierwsze lista");
@@ -62,23 +68,20 @@ class Program
         Console.ReadKey();
     }
 
-    static void IterativeSilnia(uint number)
+    static uint IterativeSilnia(uint number)
     {
         uint silnia = 1;
         for (uint naturalNumber = 1; naturalNumber <= number; naturalNumber ++)
-        {
             silnia *= naturalNumber;
-        }
-        WriteLineInColor(ConsoleColor.Green, silnia.ToString() + "\n");
+        return silnia;
     }
 
     static uint RecursiveSilnia(uint number)
-    { 
-        uint silnia = 1;
-        while(number > 1) 
-            silnia = number * RecursiveSilnia(--number);
-        WriteLineInColor(ConsoleColor.Green, silnia.ToString() + "\n");
-        return silnia;
+    {
+        if (number >= 1)
+            return number * RecursiveSilnia(number-1);
+        else
+            return 1;
     }
 
     static void ASCI(uint number)
