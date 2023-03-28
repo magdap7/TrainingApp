@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -24,6 +25,7 @@ class Program
         Console.WriteLine("(2) Silnia rekurencyjnie");
         Console.WriteLine("(3) Liczby pierwsze lista");
         Console.WriteLine("(4) Znaki w kodzie ASCI");
+        Console.WriteLine("(5) Sortowanie bąbelkowe");
 
         var option = Console.ReadLine();
         Console.WriteLine("Wybrano: " + option);
@@ -57,6 +59,15 @@ class Program
                 Console.WriteLine("Znaki w kodzie ASCI");
                 ASCI(numberValid);
                 break;
+            case "5":
+                Console.WriteLine("Sortowanie bąbelkowe");
+                var randomList = RandomList((int)numberValid);
+                Console.WriteLine("Unsorted");
+                printList(randomList);
+                var sortedList = BubbleSort(randomList);
+                Console.WriteLine("Sorted");
+                printList(sortedList);
+                break;
             default:
                 Console.WriteLine("Nie ma takiej opcji");
                 break;
@@ -82,6 +93,45 @@ class Program
             return number * RecursiveSilnia(number-1);
         else
             return 1;
+    }
+
+    static List<int> BubbleSort(List<int> list)
+    {
+        //list.Sort();
+        int maxIndex = list.Count;
+        for (int index = maxIndex-1; index >= 0 ; index--)
+        {
+            for (int index1 = 0; index1 < index; index1++)
+            { 
+                if (list[index1] > list[index1+1])
+                {
+                    int currentVal = list[index1];
+                    list.RemoveAt(index1);
+                    list.Insert(index1+1, currentVal);
+                }
+            }
+        }
+        return list;
+    }
+
+    static List<int> RandomList(int number)
+    {
+        List<int> list = new List<int>();
+        Random rand = new Random();
+
+        for (int i = 0; i < number; i++)
+        {
+            int randomNum = rand.Next(number);
+            list.Add(randomNum);
+        }
+        return list;
+    }
+
+    static void printList(List<int> list)
+    {
+        foreach (long item in list)
+            WriteLineInColor(ConsoleColor.Green, item + ", ");
+        Console.WriteLine();
     }
 
     static void ASCI(uint number)
