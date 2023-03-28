@@ -52,8 +52,10 @@ class Program
                 WriteLineInColor(ConsoleColor.Green, silniaRecursive.ToString() + "\n");
                 break;
             case "3":
-                Console.WriteLine("Liczby pierwsze lista");
-                FindPrimes(numberValid);
+                Console.WriteLine("Liczby pierwsze");
+                var primes = FindPrimes(numberValid);
+                var foundPrimes = PrintList<uint>("Primes", primes);
+                WriteLineInColor(ConsoleColor.Green, foundPrimes);
                 break;
             case "4":
                 Console.WriteLine("Znaki w kodzie ASCI");
@@ -62,11 +64,11 @@ class Program
             case "5":
                 Console.WriteLine("Sortowanie bąbelkowe");
                 var randomList = RandomList((int)numberValid);
-                Console.WriteLine("Unsorted");
-                printList(randomList);
+                var toPrintSort = PrintList<int>("Unsorted", randomList);
+                WriteLineInColor(ConsoleColor.Green, toPrintSort);
                 var sortedList = BubbleSort(randomList);
-                Console.WriteLine("Sorted");
-                printList(sortedList);
+                var toPrintUnsort = PrintList<int>("Sorted", sortedList);
+                WriteLineInColor(ConsoleColor.Green, toPrintUnsort);
                 break;
             default:
                 Console.WriteLine("Nie ma takiej opcji");
@@ -77,6 +79,15 @@ class Program
         Console.WriteLine("Time elapsed: " + StopWatch.Elapsed);
         Console.Write("Press anything to exit...");
         Console.ReadKey();
+    }
+
+    static string PrintList<T>(string title, List<T> list)
+    {
+        string listToString = title + ":\n";
+        foreach (T item in list)
+            listToString = listToString + item + ", ";
+        int left = listToString.Length - 2;
+        return listToString.Substring(0, left) + "\n";
     }
 
     static uint IterativeSilnia(uint number)
@@ -127,13 +138,6 @@ class Program
         return list;
     }
 
-    static void printList(List<int> list)
-    {
-        foreach (long item in list)
-            WriteLineInColor(ConsoleColor.Green, item + ", ");
-        Console.WriteLine();
-    }
-
     static void ASCI(uint number)
     {
         for (int iNum = 1; iNum <= number; iNum ++)
@@ -143,7 +147,7 @@ class Program
         Console.WriteLine();
     }
 
-    static void FindPrimes(uint number)
+    static List<uint> FindPrimes(uint number)
     {
         List<uint> numbers = new List<uint>();
         List<uint> primes = new List<uint>();
@@ -163,16 +167,9 @@ class Program
                 numbers.RemoveAt(0);
             }
         }
-        printList(primes);
+        return primes;
     }
-
-    static void printList(List<uint> list)
-    {
-        foreach (long item in list)
-            WriteLineInColor(ConsoleColor.Green, item + ", ");
-        Console.WriteLine();
-    }
-
+   
     static void WriteLineInColor(ConsoleColor color, string text)
     {
         Console.ForegroundColor = color;
