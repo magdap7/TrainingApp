@@ -1,6 +1,6 @@
 ﻿
 
-
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -17,11 +17,13 @@ class Program
     static void Main(string[] args)
     {
         Console.WriteLine("Wybierz:");
-        Console.WriteLine("1    - praca na długiej liczbie");
-        Console.WriteLine("2    - praca na krótkiej liczbie");
-        Console.WriteLine("3    - praca na pliku");
-        Console.WriteLine("4    - praca na klasie");
-        Console.WriteLine("5    - długości typów");
+        Console.WriteLine("1    - praca na długich liczbach: np. sortowanie, liczby pierwsze");
+        Console.WriteLine("2    - praca na krótkiej liczbie lub ciągu znaków");
+        Console.WriteLine("3    - praca na pliku: otwieranie, nadpisywanie, dopisywanie");
+        Console.WriteLine("4    - praca na klasie Person");
+        Console.WriteLine("5    - długości typów prostych");
+        Console.WriteLine("6    - praca na liście: List, IEnumerable");
+        Console.WriteLine("7    - znaki w kodzie ASCI");
         Console.WriteLine("q    - quit");
 
         var option = Console.ReadLine();
@@ -31,10 +33,11 @@ class Program
             {
                 case "1":
                     Console.WriteLine("Praca na długiej liczbie (sortowanie, liczby pierwsze)");
-                    WorkOnNumber();
+                    WorkOnLongNumbers();
                     break;
                 case "2":
                     Console.WriteLine("Praca na krótkiej liczbie (parsowanie PESEL, NIP, ASCI)");
+                    WorkOnShortNumbers();
                     break;
                 case "3":
                     Console.WriteLine("Praca na pliku (zapis w różnym trybie i odczyt)");
@@ -46,14 +49,76 @@ class Program
                     Console.WriteLine("Długości typów prostych");
                     TypeLengths();
                     break;
+                case "6":
+                    Console.WriteLine("LIsta: dodawanie, usuwanie, sortowanie");
+                    WorkOnList();
+                    WorkOnEnumerable();
+                    break;
+                case "7":
+                    Console.WriteLine("Znaki w ASCI");
+                    WriteCharsInASCI();
+                    break;
                 default:
                     Console.WriteLine("Nie ma takiej opcji, wybierz 1-5 lub q");
                     break;
             }
+            Console.Write("\nWybierz kolejną opcję: ");
             option = Console.ReadLine();
         }
         Console.Write("Do zobaczenia");
-        Console.ReadKey();
+        //Console.ReadKey();
+        return;
+    }
+
+    static void WorkOnList()
+    {
+        List<string> list = new List<string>();
+        list.Add("101");
+        list.Add("two");
+        list.Add("III");
+        list.Add("four");
+        list.Add("Event");
+        list.Add("foreach");
+        list.Add("go to");
+        list.Add("function");
+        list.Add("question");
+        var listInString = PrintList<string>("Przykładowa lista:", list);
+        WriteLineInColor(ConsoleColor.Green, listInString);
+
+        Console.WriteLine();
+        var listCount = list.Count();
+        Console.WriteLine("Liczba elementów: " + listCount);
+        var firstElement = list.FirstOrDefault();
+        Console.WriteLine("Pierwszy element: " + firstElement);
+        var lasttElement = list.LastOrDefault();
+        Console.WriteLine("Ostatni element: " + lasttElement);
+        var maxElement = list.Max();
+        Console.WriteLine("Max element: " + maxElement);
+        var foundElement = list.Find(x => x.StartsWith("f"));
+        Console.WriteLine("Znaleziony element zaczynający się na f: " + foundElement);
+        var index = list.FindIndex(x => x.Equals("four"));
+        Console.WriteLine("Indeks znalezionego elementu: " + index);
+
+        list.Sort();
+        var sortedListInString = PrintList<string>("Lista posortowana", list);
+        WriteLineInColor(ConsoleColor.Green, sortedListInString);
+
+        var elements = list.FindAll(x => x.StartsWith("f"));
+        var selectedElementsInString = PrintList<string>("Lista elementów zaczynających się na f", elements);
+        WriteLineInColor(ConsoleColor.Green, selectedElementsInString);
+
+        var orderByElemets = list.OrderByDescending(x => x).ToList();
+        var orderedListInString = PrintList<string>("Lista posortowana malejąco", orderByElemets);
+        WriteLineInColor(ConsoleColor.Green, orderedListInString);
+
+    }
+
+    static void WorkOnEnumerable()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Przykładowa lista typu IEnumerable:");
+        //Person p = new Person();
+        //IEnumerable<Person> ennumList = new IEnumerable<Person>();
     }
 
     static void TypeLengths()
@@ -68,20 +133,42 @@ class Program
         Console.WriteLine("char: \t" + char.MaxValue);
     }
 
+    static void WorkOnShortNumbers()
+    {
+        Console.WriteLine("Wybierz:");
+        Console.WriteLine("(1) Sprawdź poprawność numeru PESEL");
+        Console.WriteLine("(2) Sprawdź poprawność daty urodzenia");
 
-    static void WorkOnNumber()
+        var option = Console.ReadLine();
+        Console.WriteLine("Wybrano: " + option);
+        switch (option)
+        {
+            case "1":
+                Console.WriteLine("Podaj przykładowy nr PESEL");
+                var inputPesel = Console.ReadLine();
+                break;
+            case "2":
+                Console.WriteLine("Podaj datę urodzenia");
+                var inputData = Console.ReadLine();
+                break;
+            default:
+                Console.WriteLine("Nie ma takiej opcji");
+                break;
+        }
+    }
+
+    static void WorkOnLongNumbers()
     {
         Console.WriteLine("Wybierz:");
         Console.WriteLine("(1a) Silnia iteracyjnie");
         Console.WriteLine("(1b) Silnia rekurencyjnie");
         Console.WriteLine("(2) Liczby pierwsze lista");
-        Console.WriteLine("(3) Znaki w kodzie ASCI");
-        Console.WriteLine("(4a) Sortowanie bąbelkowe");
-        Console.WriteLine("(4b) Sortowanie szybkie");
+        Console.WriteLine("(3a) Sortowanie bąbelkowe");
+        Console.WriteLine("(3b) Sortowanie szybkie");
 
         var option = Console.ReadLine();
         Console.WriteLine("Wybrano: " + option);
-        Console.WriteLine("podaj liczbę dodatnią:");
+        Console.WriteLine("podaj liczbę dodatnią: ");
         var number = Console.ReadLine();
         while (number == "" || !uint.TryParse(number, out uint value))
         {
@@ -109,11 +196,7 @@ class Program
                 var foundPrimes = PrintList<uint>("Primes", primes);
                 WriteLineInColor(ConsoleColor.Green, foundPrimes);
                 break;
-            case "3":
-                Console.WriteLine("Znaki w kodzie ASCI");
-                ASCI(numberValid);
-                break;
-            case "4a":
+            case "3a":
                 Console.WriteLine("Sortowanie bąbelkowe");
                 var randomList = RandomList((int)numberValid);
                 var randomNumbers = PrintList<int>("Unsorted", randomList);
@@ -122,7 +205,7 @@ class Program
                 var sortedNumbers = PrintList<int>("Sorted", sortedList);
                 WriteLineInColor(ConsoleColor.Blue, sortedNumbers);
                 break;
-            case "4b":
+            case "3b":
                 Console.WriteLine("Sortowanie szybkie");
                 break;
             default:
@@ -134,16 +217,10 @@ class Program
         StopWatch.Reset();
     }
 
-    static void WorkOnShortNumber()
-    {//PESEL, NIP, ASCI
-        string shortNumber="";
-        Console.WriteLine(shortNumber);
-    }
-
-    static void WorkOnFile(string file, string testToWrite)
+    static void WorkOnFile(string file, string textToWrite)
     {
         Console.WriteLine(file);
-        Console.WriteLine(testToWrite);
+        Console.WriteLine(textToWrite);
     }
 
     static void WorkOnDateTime(DateTime date)
@@ -153,7 +230,7 @@ class Program
 
     static string PrintList<T>(string title, List<T> list)
     {
-        string listToString = title + ":\n";
+        string listToString = "\n" + title.ToUpper() + ":\n";
         foreach (T item in list)
             listToString = listToString + item + ", ";
         int left = listToString.Length - 2;
@@ -208,11 +285,14 @@ class Program
         return list;
     }
 
-    static void ASCI(uint number)
+    static void WriteCharsInASCI()
     {
-        for (int iNum = 1; iNum <= number; iNum ++)
+        for (int iNum = 0; iNum <= 255; iNum ++)
         {
-            WriteLineInColor(ConsoleColor.Green, (char)iNum + ", ");
+            string stringToWrite = $"{iNum}: {(char)iNum} | ";
+            WriteLineInColor(ConsoleColor.Green, stringToWrite);
+            if (iNum % 10 == 0)
+                Console.WriteLine();
         }
         Console.WriteLine();
     }
@@ -239,7 +319,16 @@ class Program
         }
         return primes;
     }
-   
+
+    static List<int> QueryList(List<int> listToQuery)
+    {
+        //List<uint> queriedList = new List<uint>();
+        //if (listToQuery.Count > 0)
+        listToQuery.Find(x => x == 0);
+        return listToQuery;
+    }
+
+
     static void WriteLineInColor(ConsoleColor color, string text)
     {
         Console.ForegroundColor = color;
